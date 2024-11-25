@@ -1,0 +1,6 @@
+{application,
+ live_update,
+ [{description, "Live update example"},
+  {vsn, "1.0.0"},
+  {mod, {live_update, []}},
+  {applications, [kernel, stdlib]}]}.
