@@ -1,6 +1,8 @@
 # Elixir upgrades
 
-* [Rebar3 releases](https://www.rebar3.org/docs/deployment/releases/) and [relflow](https://github.com/RJ/relflow/blob/master/README.md)
+* [Rebar3 releases](https://www.rebar3.org/docs/deployment/releases/)
+  - [relflow](https://github.com/RJ/relflow/blob/master/README.md)
+  - [erlup](https://github.com/soranoba/erlup)
 * [systools:make_relup](https://www.erlang.org/doc/apps/sasl/systools#make_relup/3)
 * [Appup cookbook](https://www.erlang.org/doc/system/appup_cookbook.html)
 * [Release handling: installing](https://www.erlang.org/doc/system/release_handling#installing-a-release)
