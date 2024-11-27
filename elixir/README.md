@@ -83,7 +83,8 @@ On the machine we're deploying to we can now unpack the version:
 
 The "permanent" version is that one that will be started when the VM is run again. You can go back into the remote console and check that it's still running the old version.
 
-    Attempting to do the upgrade just leads to errors though:
+Attempting to do the upgrade just leads to errors though:
+
     $ ./bin/luex upgrade 2.0.0
     Release 2.0.0 not found, attempting to unpack releases/luex-2.0.0.tar.gz
     Unpacked successfully: "2.0.0"
