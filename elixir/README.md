@@ -12,7 +12,7 @@ rebar3 as prod tar
 Move the tarball to a likely location and then untar it.
 
 ```bash
-mv _build/prod/rel/luex/luex-1.0.0.tar.gz /tmp/
+cp _build/prod/rel/luex/luex-1.0.0.tar.gz /tmp/
 cd /tmp/
 mkdir luex
 cd luex
@@ -75,4 +75,11 @@ On the machine we're deploying to we can now unpack the version:
 
 The "permanent" version is that one that will be started when the VM is run again. You can go back into the remote console and check that it's still running the old version.
 
+    Attempting to do the upgrade just leads to errors though:
+    $ ./bin/luex upgrade 2.0.0
+    Release 2.0.0 not found, attempting to unpack releases/luex-2.0.0.tar.gz
+    Unpacked successfully: "2.0.0"
+    ERROR: release_handler:install_release failed: {enoent,
+                                                    "/tmp/luex/releases/1.0.0/relup"}
 
+It doesn't make sense for it to be looking for a relup file in 1.0.0, because at the point of doing the 1.0.0 we don't know how the upgrade will work, so the appup file must be in the 2.0.0 code.
