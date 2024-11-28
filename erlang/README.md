@@ -58,10 +58,30 @@ Use ctrl-c twice to break out.
 
 ## Upgrade to v2
 
-From the `elixir/v2` folder build a new tarball as before:
+Assuming you didn't keep the v1 release files, you'll need to rebuild v1. Normally this would be done by `git checkout` of the commit tag that was installed, but we have it in a directory, so from the `v1` directory:
 
 
 ```bash
+rm -rf _build
+rebar3 as prod release
+```
+
+Now you would checkout the commit that you wish to use for the next version **keeping the _build directory from v1**. We'll simulate this with the following:
+
+```bash
+cd ../v2
+rm -rf _build
+mv ../v1/_build .
+```
+
+Note that the v2 release must include the `ebin/live_update.appup` file (the name is formed using the application name, which in our case is `live_udate`). This is used to describe the modules (`.erl` files) that need to be upgraded.
+
+In order to create the correct tarball we have to also use a rebar3 plugin called `rebar3_appup_plugin` (this goes in the `project_plugins`, see the [./v2/rebar3.config](./v2/rebar3.config) file -- note that this is **not** present in the v1 code). Substitute the correct relx release name, and the correct version number you're upgrading to in the `relup` command.
+
+```bash
+rebar3 as prod release
+rebar3 as prod appup generate
+rebar3 as prod relup -n luex -v 2.0.0
 rebar3 as prod tar
 ```
 
@@ -73,22 +93,29 @@ cp _build/prod/rel/luex/luex-2.0.0.tar.gz /tmp/luex/releases/
 
 On the machine we're deploying to we can now unpack the version:
 
-    $ ./bin/luex unpack 2.0.0
+    $ ./bin/luex release 2.0.0
     Release 2.0.0 not found, attempting to unpack releases/luex-2.0.0.tar.gz
     Unpacked successfully: "2.0.0"
+    Installed Release: 2.0.0
+    Made release permanent: "2.0.0"
     $ ./bin/luex versions
     Installed versions:
-    * 2.0.0 unpacked
-    * 1.0.0 permanent
+    * 2.0.0 permanent
+    * 1.0.0 old
 
-The "permanent" version is that one that will be started when the VM is run again. You can go back into the remote console and check that it's still running the old version.
+The "permanent" version is that one that will be started when the VM is run again. You can go back into the remote console and check that it's upgraded.
 
-Attempting to do the upgrade just leads to errors though:
+    $ ./bin/luex remote_console
+    Erlang/OTP 25 [erts-13.2.2.5] [source] [64-bit] [smp:32:32] [ds:32:32:10] [async-threads:1] [jit:ns]
 
-    $ ./bin/luex upgrade 2.0.0
-    Release 2.0.0 not found, attempting to unpack releases/luex-2.0.0.tar.gz
-    Unpacked successfully: "2.0.0"
-    ERROR: release_handler:install_release failed: {enoent,
-                                                    "/tmp/luex/releases/1.0.0/relup"}
+    Eshell V13.2.2.5  (abort with ^G)
+    (luex@lowry)1> example_library:foo().
+    2
+    (luex@lowry)2> counter:current_value().
+    2
+    (luex@lowry)3> counter:increment().
+    ok
+    (luex@lowry)4> counter:current_value().
+    3
 
-It doesn't make sense for it to be looking for a relup file in 1.0.0, because at the point of doing the 1.0.0 we don't know how the upgrade will work, so the appup file must be in the 2.0.0 code.
+The `counter:current_value().` should print whatever the last value was when you tested the remote console on v1. This shows that the library has upgraded and the gen server has been upgraded without losing the gen server state.
