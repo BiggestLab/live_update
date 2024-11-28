@@ -17,7 +17,7 @@ From the `elixir/v1` folder, build a tarball for deployment:
 rebar3 as prod tar
 ```
 
-Move the tarball to a likely location and then untar it.
+Move the tarball to a likely location and then untar it. On a real deployment this will likely be `rsync`ed to the target machine in a suitable directory, but for the purposes of this demo, we can `cp` to the `/tmp` folder and work from there.
 
 ```bash
 cp _build/prod/rel/luex/luex-1.0.0.tar.gz /tmp/
