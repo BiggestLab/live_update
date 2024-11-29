@@ -15,6 +15,25 @@ Start using the `-sname` option to give the instance a short name. This is a sho
 
 It's very easy to end up in a position where the connections aren't possilbe. Use `is_alive/0` to make sure things are running. The usual connection you'll see is `net_adm:ping/1`, but it will always just print `pang` no matter what. Use `net_kernel:connect_node/1` instead (`net_kernel:connect_node('idfe@lowry').`). It will report `ignored` if the node isn't alive (for some reason this is not documented anywhere) and it will return `false` if the connection can't be established (presumably networking related).
 
+A cookie for a specific node can be set using `erlang:set_cookie(Node2, DiffCookie)`, e.g. `erlang:set_cookie('idfe@lowry', 'QAEVKAFZBIMGYIYTIRFG').`. The default cookie can be found the user's home directory at `~/.elrang.cookie`.
+
+The documentation about distributed Erlang is a bit confusing. The important point is that both nodes using the _same cookie_ for each other. The simplest way of doing this is to use `set_cookie` on each machine to set a cookie for the other.
+
+On idfe@lowry:
+
+    > erlang:set_cookie('idfe@indecline', 'idfecookie').
+    true
+
+And on idfe@indecline:
+
+    > erlang:set_cookie('idfe@lowry', 'idfecookie').
+    true
+
+Note that `idfecookie` is not the default cookie on either node. The connection can now be initiated from either side. E.g. on `idfe@indecline`:
+
+    > net_kernel:connect_node('idfe@lowry').
+    true
+
 
 ## Elixir
 
