@@ -13,7 +13,7 @@ BEAM is BEAM, but Erlang is not Elixir.
 
 Start using the `-sname` option to give the instance a short name. This is a short name and means that all connections must be between VMs started with the short name. The same goes for fully qualified names -- those can only connect to VMs started with fully qualified names.
 
-It's very easy to end up in a position where the connections aren't possible. Use `is_alive/0` to make sure things are running. The usual connection you'll see is `net_adm:ping/1`, but it will always just print `pang` no matter what. Use `net_kernel:connect_node/1` instead (`net_kernel:connect_node('idfe@lowry').`). It will report `ignored` if the node isn't alive (for some reason this is not documented anywhere) and it will return `false` if the connection can't be established (presumably networking related).
+It's very easy to end up in a position where the connections aren't possible. Use `is_alive/0` to make sure things are running. The usual command you see in documentation about connecting Erlang nodes is `net_adm:ping/1`, but it will always just print `pang` no matter what. Use `net_kernel:connect_node/1` instead (`net_kernel:connect_node('idfe@lowry').`). It will report `ignored` if the node isn't alive (for some reason this is not documented anywhere) and it will return `false` if the connection can't be established (presumably networking related).
 
 A cookie for a specific node can be set using `erlang:set_cookie(Node2, DiffCookie)`, e.g. `erlang:set_cookie('idfe@lowry', 'QAEVKAFZBIMGYIYTIRFG').`. The default cookie can be found the user's home directory at `~/.elrang.cookie`.
 
